@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="parser_driver example/math.dart" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application" singleton="true">
+  <configuration default="false" name="math.dart" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application" singleton="true">
     <option name="arguments" value="example/math.dart" />
     <option name="filePath" value="$PROJECT_DIR$/bin/dart2asm.dart" />
     <option name="workingDirectory" value="$PROJECT_DIR$" />

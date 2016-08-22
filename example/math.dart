@@ -1,5 +1,9 @@
 library poop;
 
-foo() {
+leet() => 1337;
+
+poop() => leet();
+
+main() {
   var four = 2 * 2;
 }

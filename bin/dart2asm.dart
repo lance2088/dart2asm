@@ -11,21 +11,25 @@ import 'package:analyzer/src/dart/scanner/reader.dart';
 import 'package:analyzer/src/dart/scanner/scanner.dart';
 import 'package:analyzer/src/generated/error.dart';
 import 'package:analyzer/src/generated/parser.dart';
+import "package:dart2asm/src/asm/all_imports.dart" as asm;
+import "package:dart2asm/src/visitor.dart";
+import "package:dart2asm/src/codegen/all_imports.dart";
 
 main(List<String> args) {
-  print('working dir ${new File('.').resolveSymbolicLinksSync()}');
-
-  if (args.length == 0) {
-    print('Usage: parser_driver [files_to_parse]');
-    exit(0);
-  }
 
   for (var arg in args) {
-    _parse(new File(arg));
+    CompilationUnit compilationUnit = _parse(new File(arg));
+
+    if (compilationUnit != null) {
+      AssemblyCodegen assemblyCodegen = new NasmAssemblyCodegen();
+      var visitor = new Dart2AsmVisitor();
+      compilationUnit.accept(visitor);
+      print(assemblyCodegen.generate(visitor.assembly));
+    }
   }
 }
 
-_parse(File file) {
+CompilationUnit _parse(File file) {
   var src = file.readAsStringSync();
   var errorListener = new _ErrorCollector();
   var reader = new CharSequenceReader(src);
@@ -34,12 +38,13 @@ _parse(File file) {
   var parser = new Parser(null, errorListener);
   var unit = parser.parseCompilationUnit(token);
 
-  var visitor = new _ASTVisitor();
-  unit.accept(visitor);
+  if (errorListener.errors.isNotEmpty) {
+    for (var error in errorListener.errors) {
+      stderr.writeln(error);
+    }
 
-  for (var error in errorListener.errors) {
-    print(error);
-  }
+    return null;
+  } else return unit;
 }
 
 class _ASTVisitor extends GeneralizingAstVisitor {
