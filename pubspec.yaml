@@ -1,0 +1,14 @@
+name: dart2asm
+description: Compiles a very limited subset of Dart into x86 Assembly.
+version: 1.0.0-dev
+author: Tobe O <thosakwe@gmail.com>
+homepage: https://github.com/thosakwe/dart2asm
+dependencies:
+  analyzer: ">=0.28.0 <1.0.0"
+  args: ">=0.13.5 <1.0.0"
+  barback: ">=0.15.2 <1.0.0"
+  merge_map: ">=1.0.0 <2.0.0"
+dev_dependencies:
+  # test: ">=0.12.15+3 <0.13.0"
+executables:
+  dart2asm:
