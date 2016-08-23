@@ -6,6 +6,7 @@ export "indent.dart";
 export "initialized_data_declaration.dart";
 export "instruction.dart";
 export "label.dart";
+export "raw.dart";
 export "section.dart";
 export "statement.dart";
 export "times.dart";

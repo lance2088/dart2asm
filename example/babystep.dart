@@ -1,9 +1,9 @@
-import "package:dart2asm/def.dart";
+import "package:dart2asm/def.dart" as asm;
+export "package:dart2asm/def.dart";
 
 four() => 4;
 
 hang() {
-  raw("cli");
-  jmp(hang);
-  four();
+  asm.raw("cli");
+  asm.jmp(hang);
 }

@@ -16,7 +16,7 @@ import "package:dart2asm/src/visitor.dart";
 import "package:dart2asm/src/codegen/all_imports.dart";
 
 main(List<String> args) {
-
+  bool debug = true;
   for (var arg in args) {
     CompilationUnit compilationUnit = _parse(new File(arg));
 
@@ -24,7 +24,21 @@ main(List<String> args) {
       AssemblyCodegen assemblyCodegen = new NasmAssemblyCodegen();
       var visitor = new Dart2AsmVisitor();
       compilationUnit.accept(visitor);
-      print(assemblyCodegen.generate(visitor.assembly));
+
+      if (visitor.errors.isNotEmpty) {
+        for (var error in visitor.errors) {
+          // Also has error["source"]
+          stderr.writeln(error["message"]);
+        }
+      }
+
+      for (var warning in visitor.warnings) {
+        // Also has warning["source"]
+        stderr.writeln(warning["message"]);
+      }
+
+      if (visitor.errors.isEmpty || debug)
+        print(assemblyCodegen.generate(visitor.assembly));
     }
   }
 }
@@ -44,7 +58,8 @@ CompilationUnit _parse(File file) {
     }
 
     return null;
-  } else return unit;
+  } else
+    return unit;
 }
 
 class _ASTVisitor extends GeneralizingAstVisitor {
@@ -56,7 +71,9 @@ class _ASTVisitor extends GeneralizingAstVisitor {
 
 class _ErrorCollector extends AnalysisErrorListener {
   List<AnalysisError> errors;
+
   _ErrorCollector() : errors = new List<AnalysisError>();
+
   @override
   onError(error) => errors.add(error);
 }
